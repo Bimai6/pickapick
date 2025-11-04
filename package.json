@@ -1,0 +1,23 @@
+{
+  "name": "pickapick",
+  "version": "1.0.0",
+  "description": "Pokemon web app draft management type with rooms to select on stream with many players.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bimai6/pickapick.git"
+  },
+  "author": "Mario Lebrero/Judith Tamayo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bimai6/pickapick/issues"
+  },
+  "homepage": "https://github.com/Bimai6/pickapick#readme",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
