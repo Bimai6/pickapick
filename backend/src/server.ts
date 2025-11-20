@@ -1,23 +1,39 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-dotenv.config();
 import cors from "cors";
+import { buildPokemonList } from "./services/pokeapiService.js";
+import type { Pokemon } from "./types/pokemon.ts";
+
+dotenv.config();
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => res.send("Server is running"));
 
 const port = Number(process.env.PORT ?? 3000);
 
-app.listen(port, () => {
-    console.log(`Server is running http://localhost:${port}`);
-})
+async function startServer() {
+  try {
+    await mongoose.connect(String(process.env.MONGO_URI));
+    console.log("Connected to MongoDB Atlas");
 
-mongoose
-    .connect(String(process.env.MONGO_URI))
-    .then(()=> console.log("Connected to MongoDB Atlas"))
-    .catch((error)=> console.log(error))
+    const pokemons = await buildPokemonList();
+    console.log(`Loaded ${pokemons.length} Pokémon`);
+
+    app.locals.pokemons = pokemons;
+
+    app.listen(port, () => {
+      console.log(`Server is running http://localhost:${port}`);
+    });
+
+  } catch (error) {
+    console.error("Error starting server:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
