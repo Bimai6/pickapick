@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import { buildPokemonList } from "./services/pokeapiService.js";
-import type { Pokemon } from "./types/pokemon.ts";
+import api from "./routes/api.js";
+import pokemonRouter from "./routes/pokemonRoutes.js";
 
 dotenv.config();
 
@@ -11,6 +12,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api", api);
+app.use("/pokemon", pokemonRouter)
 
 app.get("/", (req, res) => res.send("Server is running"));
 
