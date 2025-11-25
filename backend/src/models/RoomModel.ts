@@ -1,63 +1,64 @@
 import mongoose, { Schema } from "mongoose";
 
-const roomSchema = new Schema({
+const roomSchema = new mongoose.Schema({
   hash: {
     type: String,
     trim: true,
     minlength: 7,
     maxlength: 7,
     unique: true,
-    required: true
+    required: true,
   },
 
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
 
   capacity: {
     type: Number,
     required: true,
     min: 1,
-    max: 8
+    max: 8,
   },
 
   players: {
-  type: [{
-    type: Schema.Types.ObjectId,
-    ref: "User"
-  }],
-  validate: {
-    validator: function (arr: mongoose.Types.ObjectId[]) {
-      return arr.length <= this.capacity;
+    type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    validate: {
+      validator: function (arr: mongoose.Types.ObjectId[]) {
+        return arr.length <= this.capacity;
+      },
+      message: "Room is full",
     },
-    message: "Room is full"
-  }
-},
+  },
 
   state: {
     type: String,
     enum: ["ONGOING", "FINISHED"],
-    default: "ONGOING"
+    default: "ONGOING",
   },
 
   metagame: {
     type: Schema.Types.ObjectId,
     ref: "Metagame",
-    required: true
+    required: true,
   },
 
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
 
   timers: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 export default mongoose.model("Room", roomSchema);
-
