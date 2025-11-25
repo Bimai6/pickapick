@@ -1,0 +1,25 @@
+import mongoose, { Schema } from "mongoose";
+
+const roomSchema = new mongoose.Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+
+  roomId: {
+    type: Schema.Types.ObjectId,
+    ref: "Room",
+    required: true,
+  },
+
+  pkmnSelected: [
+    {
+      type: String,
+      trim: true,
+      required: true,
+    },
+  ],
+});
+
+export default mongoose.model("Room", roomSchema);
