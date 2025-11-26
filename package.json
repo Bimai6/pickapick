@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Bimai6/pickapick#readme",
   "dependencies": {
     "concurrently": "^9.2.1",
+    "joi": "^18.0.2",
     "p-limit": "^7.2.0"
   }
 }
