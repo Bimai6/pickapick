@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import fs from "fs";
+import https from "https";
+
 import { buildPokemonList } from "./services/pokeapiService.js";
 import api from "./routes/api.js";
 import pokemonRouter from "./routes/pokemonRoutes.js";
@@ -14,11 +17,11 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api", api);
-app.use("/pokemon", pokemonRouter)
+app.use("/pokemon", pokemonRouter);
 
 app.get("/", (req, res) => res.send("Server is running"));
 
-const port = Number(process.env.PORT ?? 3000);
+const httpsPort = process.env.PORT;
 
 async function startServer() {
   try {
@@ -30,8 +33,13 @@ async function startServer() {
 
     app.locals.pokemons = pokemons;
 
-    app.listen(port, () => {
-      console.log(`Server is running http://localhost:${port}`);
+    const httpsOptions = {
+      key: fs.readFileSync("./src/certs/key.pem"),  
+      cert: fs.readFileSync("./src/certs/cert.pem"),
+    };
+
+    https.createServer(httpsOptions, app).listen(httpsPort, () => {
+      console.log(`Server is running https://localhost:${httpsPort}`);
     });
 
   } catch (error) {
