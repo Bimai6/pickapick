@@ -10,6 +10,6 @@ api.get("/", (req, res)=> {
 })
 
 api.get("/login", verifyToken, loginUser);
-api.get("/register", verifyToken, loginUser);
+api.get("/register", verifyToken, registerUser);
 
 export default api;

@@ -26,23 +26,24 @@ const generateToken = (userId : ObjectId) => {
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { fullName, user, email, password } = req.body;
+    const { name, email, password, avatar, favPokemon, teamFlag } = req.body;
 
     const existingUser = await UserModel.findOne({
-      $or: [{ email }, { user }],
+      $or: [{ email }, { name }],
     });
     if (existingUser) {
       return res
         .status(400)
-        .json({ message: "El usuario o el email ya están registrados" });
+        .json({ message: "User or email are already registered" });
     }
 
     const newUser = await UserModel.create({
-      fullName,
-      user,
-      email,
+      name,
       password,
-      myReservations: [],
+      email,
+      avatar,
+      favPokemon,
+      teamFlag
     });
 
     const token = generateToken(newUser.id);
@@ -52,29 +53,29 @@ export const registerUser = async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    console.error("Error en registro:", error);
+    console.error("Error on register:", error);
     res
       .status(500)
-      .json({ message: "Error en el servidor durante el registro" });
+      .json({ message: "Error on server during register" });
   }
 };
 
 export const loginUser = async (req : Request, res : Response) => {
   try {
-    const { user, password } = req.body;
+    const { name, email, password } = req.body;
 
 
     const existingUser = await UserModel.findOne({
-      $or: [{ user }, { email: user }],
+      $or: [{ name }, { email }],
     });
 
     if (!existingUser) {
-      return res.status(400).json({ message: "Usuario no encontrado" });
+      return res.status(400).json({ message: "User not found" });
     }
 
     const isMatch = await existingUser.matchPassword(password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Contraseña incorrecta" });
+      return res.status(401).json({ message: "Password is not correct" });
     }
 
     const token = generateToken(existingUser.id);
@@ -84,7 +85,7 @@ export const loginUser = async (req : Request, res : Response) => {
       token,
     });
   } catch (error) {
-    console.error("Error en login:", error);
-    res.status(500).json({ message: "Error en el servidor durante el login" });
+    console.error("Error on login:", error);
+    res.status(500).json({ message: "Error on server during login" });
   }
 };
