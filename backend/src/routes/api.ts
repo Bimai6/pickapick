@@ -9,7 +9,7 @@ api.get("/", (req, res)=> {
     res.send("You are on the API route access");
 })
 
-api.get("/login", verifyToken, loginUser);
-api.get("/register", verifyToken, registerUser);
+api.post("/login", loginUser);
+api.post("/register", registerUser);
 
 export default api;
