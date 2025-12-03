@@ -1,5 +1,4 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { ProtectedRoute } from './ProtectedRoute';
 import { GuestRoute } from './GuestRoute';
 import Home from '../pages/Home';
@@ -8,9 +7,11 @@ import Register from '../pages/Register';
 import Lobby from '../pages/Lobby';
 import Room from '../pages/Room';
 import Storage from '../pages/Storage';
+import { useAuth } from '../hooks/useAuth';
 
 export function AppRouter() {
-  const { isAuth } = useAuth();
+
+  const { isAuth } = useAuth()
 
   const router = createBrowserRouter([
     { path: '/', element: <Home /> },
