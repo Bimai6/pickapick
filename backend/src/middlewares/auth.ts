@@ -1,6 +1,6 @@
-import type { NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import type { Response } from 'express';
+import type { JwtPayload } from "jsonwebtoken";
+import type { Response, NextFunction } from "express";
 import type { CustomRequest } from "../types/customRequest.js";
 
 export const verifyToken = (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -11,13 +11,17 @@ export const verifyToken = (req: CustomRequest, res: Response, next: NextFunctio
   if (!token) return res.status(401).json({ message: "No token provided" });
 
   const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) {
-    throw new Error('JWT secret is not defined');
-  }
+  if (!jwtSecret) throw new Error("JWT secret is not defined");
 
   jwt.verify(token, jwtSecret, (err, decoded) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
-    req.user = decoded;
+
+    if (!decoded || typeof decoded === "string") {
+      return res.status(403).json({ message: "Invalid token payload" });
+    }
+    
+    req.user = { ...decoded, id: (decoded as JwtPayload).id };
+
     next();
   });
 };

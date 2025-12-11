@@ -1,5 +1,9 @@
+// types/customRequest.ts
 import type { Request } from "express";
 
 export interface CustomRequest extends Request {
-  user?: any; 
+  user?: {
+    id: string;
+    [key: string]: any;
+  };
 }
