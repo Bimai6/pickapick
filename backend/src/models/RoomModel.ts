@@ -23,6 +23,11 @@ const roomSchema = new mongoose.Schema({
     max: 8,
   },
 
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+
   players: {
     type: [
       {
@@ -40,8 +45,8 @@ const roomSchema = new mongoose.Schema({
 
   state: {
     type: String,
-    enum: ["ONGOING", "FINISHED"],
-    default: "ONGOING",
+    enum: ["LOBBY", "ONGOING", "FINISHED"],
+    default: "LOBBY",
   },
 
   metagame: {
